@@ -11,7 +11,7 @@ public class SynthModel
 	private int channel = 0;
 	private int velocity = 100;
 	//variable pour enregistrer la sequence midi
-	private boolean enregistrement;
+	private boolean enregistrement = false;
 	private Track enregistrementSequence;
 	private long debutRecord;
 	private long startTime;
@@ -106,10 +106,19 @@ public class SynthModel
 			}
 		}
 	}
+	public boolean isRecording()
+	{
+		return this.enregistrement;
+	}
 	public void startRecord()
 	{
 		this.enregistrementSequence = this.sequence.createTrack();
 		this.startTime = System.currentTimeMillis();
+		this.enregistrement = true;
+	}
+	public void stopRecord()
+	{
+		this.enregistrement = false;
 	}
 	public void ajoutEvenement(int type, int num) {
         ShortMessage message = new ShortMessage();

@@ -8,14 +8,21 @@ public class OptionPanel extends JPanel
 	private JSlider velocite;
 	private SynthModel synthModel;
 	private JCheckBox mouseOverPiano;
+	private JButton record;
 	public OptionPanel(SynthModel synthModel)
 	{
 		this.synthModel = synthModel;
+		//slider 1
 		this.velocite = createSlider("Velocité",this);
 		this.velocite.addChangeListener(new SliderControler(this.synthModel));
+		//checkbox over
 		this.mouseOverPiano = new JCheckBox("mouseOver", false);
+		//enregistrement
+		this.record = new JButton("°");
+		this.record.addActionListener(new RecordButton(this.synthModel));
 		this.add(this.mouseOverPiano);
 		this.add(this.velocite);
+		this.add(this.record);
 		JScrollPane scroll = new JScrollPane(new ListeInstru(this.synthModel));
 		//this.add(new ListeInstru(this.synthModel.getAllInstru()));
 		this.add(scroll);
