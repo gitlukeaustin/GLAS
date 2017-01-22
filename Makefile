@@ -12,7 +12,7 @@ MAIN = Main/Controler/GLAS
 .java.class:
 	$(JC) $(JCFLAGS) $*.java
 
-JAVASRC = $(shell ls Main/Controler/*.java Main/Model/*.java Main/View/*.java Keybord/Controler/*.java Keybord/Model/*.java Keybord/View/*.java)
+JAVASRC = $(shell ls Main/Controler/*.java Main/Model/*.java Main/View/*.java Keybord/Controler/*.java Keybord/Model/*.java Keybord/View/*.java RythmBox/Controler/*.java RythmBox/Model/*.java RythmBox/View/*.java)
 CLASSES = $(JAVASRC:.java=.class)
 
 all: classes
