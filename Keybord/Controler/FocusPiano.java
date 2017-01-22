@@ -1,5 +1,5 @@
-package Controler;
-import View.*;
+package Keybord.Controler;
+import Keybord.View.*;
 import java.awt.event.*;
 public class FocusPiano implements MouseListener
 {

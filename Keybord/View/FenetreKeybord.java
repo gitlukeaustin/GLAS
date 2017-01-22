@@ -1,9 +1,9 @@
-package View;
+package Keybord.View;
 
 import javax.swing.*;
 import java.awt.*;
-import Model.*;
-import Controler.*;
+import Keybord.Model.*;
+import Keybord.Controler.*;
 public class FenetreKeybord extends JFrame
 {
 	private PianoView piano;
@@ -18,7 +18,7 @@ public class FenetreKeybord extends JFrame
 		this.setSize(42*largeur+18,450);
 		this.optionPanel = new OptionPanel(this.synthModel);
 		this.piano = new PianoView(this.synthModel,this.optionPanel);
-		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		this.add(this.piano);
 		this.add(this.optionPanel);
 	}

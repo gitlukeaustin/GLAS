@@ -75,8 +75,12 @@ public class FenetreMain extends JFrame
 		JMenu menuEdit = new JMenu("Edit");
 		JMenu menuNew = new JMenu("New");
 		JMenuItem piano = new JMenuItem("Piano");
+		JMenuItem rythmBox = new JMenuItem("RythmBox");
 		menuNew.add(piano);
-		piano.addActionListener(new AfficherPianoControler());
+		menuNew.add(rythmBox);
+		MenuControl menuControl = new MenuControl();
+		piano.addActionListener(menuControl);
+		rythmBox.addActionListener(menuControl);
 		JMenu menuHelp = new JMenu("Help");
 		menuBar.add(menuFiles);
 		menuBar.add(menuEdit);

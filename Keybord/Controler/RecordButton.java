@@ -1,9 +1,9 @@
-package Controler;
+package Keybord.Controler;
 import java.awt.event.*;
 import java.io.File;
 import javax.swing.*;
-import Model.*;
-import View.*;
+import Keybord.Model.*;
+import Keybord.View.*;
 
 public class RecordButton implements ActionListener
 {

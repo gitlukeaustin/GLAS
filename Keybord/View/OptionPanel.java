@@ -1,9 +1,9 @@
-package View;
+package Keybord.View;
 import javax.swing.*;
 import java.awt.*;
-import View.*;
-import Model.*;
-import Controler.*;
+import Keybord.View.*;
+import Keybord.Model.*;
+import Keybord.Controler.*;
 public class OptionPanel extends JPanel
 {
 	private JSlider velocite;

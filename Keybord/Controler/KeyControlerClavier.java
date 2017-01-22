@@ -1,6 +1,6 @@
-package Controler;
-import Model.*;
-import View.*;
+package Keybord.Controler;
+import Keybord.Model.*;
+import Keybord.View.*;
 import java.util.*;
 import java.awt.event.*;
 public class KeyControlerClavier implements KeyListener

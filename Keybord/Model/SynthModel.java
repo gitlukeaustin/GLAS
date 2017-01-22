@@ -1,4 +1,4 @@
-package Model;
+package Keybord.Model;
 import javax.sound.midi.*;
 import java.io.File;
 import java.io.IOException;

@@ -1,6 +1,6 @@
-package View;
-import Model.*;
-import Controler.*;
+package Keybord.View;
+import Keybord.Model.*;
+import Keybord.Controler.*;
 import javax.swing.*;
 import javax.swing.table.*;
 import javax.sound.midi.*;

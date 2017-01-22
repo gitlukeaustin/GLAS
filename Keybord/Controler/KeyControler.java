@@ -1,8 +1,8 @@
-package Controler;
+package Keybord.Controler;
 import java.awt.event.*;
 import javax.swing.*;
-import View.*;
-import Model.*;
+import Keybord.View.*;
+import Keybord.Model.*;
 import javax.sound.midi.*;
 
 import java.util.*;

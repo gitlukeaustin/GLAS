@@ -1,6 +1,6 @@
-package Controler;
+package Keybord.Controler;
 
-import View.*;
+import Keybord.View.*;
 import javax.swing.*;
 public class KeybordMain implements Runnable
 {

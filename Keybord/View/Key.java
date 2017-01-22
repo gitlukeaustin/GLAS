@@ -1,4 +1,4 @@
-package View;
+package Keybord.View;
 
 import javax.swing.*;
 import java.awt.Rectangle;
