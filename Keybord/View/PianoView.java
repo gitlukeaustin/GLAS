@@ -3,6 +3,7 @@ import Model.*;
 import Controler.*;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.*;
 import java.util.*;
 public class PianoView extends JPanel
 {
@@ -20,6 +21,8 @@ public class PianoView extends JPanel
         this.setPreferredSize(new Dimension(42*largeur, hauteur+1));
         int noteDepart = 24;
         KeyControler keyControler = new KeyControler(this,this.notesBlanche,this.notesNoire,this.synthModel,this.optnPanel.getCheckMouseOver());
+        this.addKeyListener(new KeyControlerClavier(this,this.synthModel,this.notesBlanche,this.notesNoire));
+        this.setFocusable(true);
         int blancheOctave[] = { 0, 2, 4, 5, 7, 9, 11 };
         for (int i = 0, x = 0; i < 6; i++) {
             for (int j = 0; j < 7; j++, x += largeur) {
@@ -38,7 +41,11 @@ public class PianoView extends JPanel
         }
         this.addMouseListener(keyControler);
         this.addMouseMotionListener(keyControler);
-               
+        FocusPiano focusPiano = new FocusPiano(this);  
+        this.optnPanel.addMouseListener(focusPiano);
+        this.optnPanel.getAllButton()[0].addMouseListener(focusPiano);
+        this.optnPanel.getAllButton()[1].addMouseListener(focusPiano); 
+        this.optnPanel.getAllButton()[2].addMouseListener(focusPiano);            
 	}
 	public void paint(Graphics g) {
             Graphics2D g2 = (Graphics2D) g;

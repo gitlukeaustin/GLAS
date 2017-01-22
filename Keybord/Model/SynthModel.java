@@ -1,5 +1,8 @@
 package Model;
 import javax.sound.midi.*;
+import java.io.File;
+import java.io.IOException;
+
 public class SynthModel 
 {
 	private Synthesizer synth;
@@ -11,6 +14,7 @@ public class SynthModel
 	private int channel = 0;
 	private int velocity = 100;
 	//variable pour enregistrer la sequence midi
+	private Sequencer sequencer;
 	private boolean enregistrement = false;
 	private Track enregistrementSequence;
 	private long debutRecord;
@@ -28,6 +32,7 @@ public class SynthModel
 			this.synth = MidiSystem.getSynthesizer();
 			this.sequence = new Sequence(Sequence.PPQ, 10);
 			this.synth.open();
+			this.sequencer = MidiSystem.getSequencer();
 		}catch(Exception e)
 		{
 			System.out.println(e.getMessage());
@@ -64,14 +69,14 @@ public class SynthModel
 	public void noteOnModel(int note)
 	{
 		this.currentChannel.noteOn(note,this.velocity);
-		if (this.enregistrement) {
+		if (this.isRecording()) {
             ajoutEvenement(NOTEON, note);
         }
 	}
 	public void noteOffModel(int note)
 	{
 		this.currentChannel.noteOff(note,this.velocity);
-		if (this.enregistrement) {
+		if (this.isRecording()) {
             ajoutEvenement(NOTEOFF, note);
         }
 	}
@@ -97,6 +102,9 @@ public class SynthModel
 			{
 				this.synth.loadInstrument(this.instruments[numInstru]);
 				this.currentChannel.programChange(numInstru);
+				if (this.isRecording()) {
+                	ajoutEvenement(PROGRAM, numInstru);
+            }
 				this.currentInstru = numInstru;
 			}
 			else
@@ -115,10 +123,23 @@ public class SynthModel
 		this.enregistrementSequence = this.sequence.createTrack();
 		this.startTime = System.currentTimeMillis();
 		this.enregistrement = true;
+		ajoutEvenement(PROGRAM,this.currentInstru);
 	}
 	public void stopRecord()
 	{
 		this.enregistrement = false;
+	}
+	public void playSequence()
+	{
+		try {
+            this.sequencer.open();
+            this.sequencer.setSequence(this.sequence);
+        } catch (Exception ex) { ex.printStackTrace(); }
+        this.sequencer.start();
+	}
+	public void pauseSequence()
+	{
+		this.sequencer.stop();
 	}
 	public void ajoutEvenement(int type, int num) {
         ShortMessage message = new ShortMessage();
@@ -130,4 +151,20 @@ public class SynthModel
             enregistrementSequence.add(event);
         } catch (Exception ex) { ex.printStackTrace(); }
     }
+    public void saveMidiFile(File file) {
+            try {
+                int[] fileTypes = MidiSystem.getMidiFileTypes(sequence);
+                if (fileTypes.length == 0) {
+                    System.out.println("Can't save sequence");
+                } else {
+                    if (MidiSystem.write(sequence, fileTypes[0], file) == -1) {
+                        throw new IOException("Problems writing to file");
+                    } 
+                }
+            } catch (SecurityException ex) { 
+                //JavaSound.showInfoDialog();
+            } catch (Exception ex) { 
+                ex.printStackTrace(); 
+            }
+        }
 }

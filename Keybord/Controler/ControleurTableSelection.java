@@ -20,7 +20,7 @@ public class ControleurTableSelection implements ListSelectionListener{
             ligne = this.table.getSelectedRow();
             colone = this.table.getSelectedColumn();
         }
-        System.out.println("instru selectionné ="+(colone*8+ligne));
+        //System.out.println("instru selectionné ="+(colone*8+ligne));
         this.synthModel.setInstrument(colone*8+ligne);
     }
 }
