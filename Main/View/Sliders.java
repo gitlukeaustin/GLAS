@@ -44,7 +44,7 @@ public class Sliders extends JPanel
         this.constraints.gridx = 4;
         this.constraints.gridwidth = 1;
         this.constraints.gridheight = 5;
-        this.constraints.anchor = GridBagConstraints.LAST_LINE_END;
+        this.constraints.anchor = GridBagConstraints.FIRST_LINE_END;
         this.constraints.insets = new Insets(2,2,2,2);
     }
 }
