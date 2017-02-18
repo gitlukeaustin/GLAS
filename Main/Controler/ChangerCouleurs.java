@@ -42,15 +42,15 @@ public class ChangerCouleurs implements ActionListener
         String nom = ((JRadioButtonMenuItem)e.getSource()).getText();
         ArrayList<Color> choix = theme_a;
 
-        if(nom.equals("B"))
+        if(nom.equals("Monochrome"))
         {
             choix = theme_b;
         }
-        else if(nom.equals("C"))
+        else if(nom.equals("Boue"))
         {
             choix = theme_c;
         }
-        else if(nom.equals("D"))
+        else if(nom.equals("Clinique"))
         {
             choix = theme_d;
         }

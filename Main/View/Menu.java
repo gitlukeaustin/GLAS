@@ -14,8 +14,10 @@ public class Menu extends JMenuBar
         
         JMenuItem open = new JMenuItem("Ouvrir");
         open.setMnemonic(KeyEvent.VK_O);
+        open.addActionListener(new MenuControl());
         JMenuItem save = new JMenuItem("Sauvegarder");
         save.setMnemonic(KeyEvent.VK_S);
+        open.addActionListener(new MenuControl());
         filemenu.add(open);
         filemenu.add(save);
         
@@ -37,13 +39,13 @@ public class Menu extends JMenuBar
         JMenu color = new JMenu("Couleurs");
         color.setMnemonic(KeyEvent.VK_C);
         
-        JRadioButtonMenuItem a = new JRadioButtonMenuItem("A");
+        JRadioButtonMenuItem a = new JRadioButtonMenuItem("Violet");
         a.addActionListener(new ChangerCouleurs(panels));
-        JRadioButtonMenuItem b = new JRadioButtonMenuItem("B");
+        JRadioButtonMenuItem b = new JRadioButtonMenuItem("Monochrome");
         b.addActionListener(new ChangerCouleurs(panels));
-        JRadioButtonMenuItem c = new JRadioButtonMenuItem("C");
+        JRadioButtonMenuItem c = new JRadioButtonMenuItem("Boue");
         c.addActionListener(new ChangerCouleurs(panels));
-        JRadioButtonMenuItem d = new JRadioButtonMenuItem("D");
+        JRadioButtonMenuItem d = new JRadioButtonMenuItem("Clinique");
         d.addActionListener(new ChangerCouleurs(panels));
         
         color.add(a);
