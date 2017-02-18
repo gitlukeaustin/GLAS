@@ -16,10 +16,16 @@ public class FenetreMain extends JFrame
 		//changement du gestionnaire de mise en page.
 		this.setLayout(new GridBagLayout());
 		this.c = new GridBagConstraints();
-		menuBar();
+		/*menuBar();
 		coloneGauche();
 		vueMilieu();
-		vueBas();		
+		vueBas();*/
+        Onde wave = new Onde();
+        this.add(wave,wave.constraints);
+        Playback menu = new Playback();
+        this.add(menu,menu.constraints);
+        Sliders effets = new Sliders();
+        this.add(effets,effets.constraints);
 		this.setVisible(true);
 	}
 	private void vueBas()
