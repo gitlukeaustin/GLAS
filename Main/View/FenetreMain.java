@@ -3,6 +3,7 @@ import Main.Controler.*;
 import java.awt.*;
 import javax.swing.*;
 import javax.swing.text.html.*;
+import java.util.*;
 public class FenetreMain extends JFrame
 {
 	private WidgetAudio[] tableauWidgetAudio = new WidgetAudio[4];
@@ -16,10 +17,21 @@ public class FenetreMain extends JFrame
 		//changement du gestionnaire de mise en page.
 		this.setLayout(new GridBagLayout());
 		this.c = new GridBagConstraints();
-		menuBar();
+		/*menuBar();
 		coloneGauche();
 		vueMilieu();
-		vueBas();		
+		vueBas();*/
+        ArrayList<JPanel> panels = new ArrayList<JPanel>();
+        Onde wave = new Onde();
+        this.add(wave,wave.constraints);
+        panels.add(wave);
+        Playback menu = new Playback();
+        this.add(menu,menu.constraints);
+        panels.add(menu);
+        Sliders effets = new Sliders();
+        this.add(effets,effets.constraints);
+        panels.add(effets);
+        this.setJMenuBar(new Menu(panels));
 		this.setVisible(true);
 	}
 	private void vueBas()
