@@ -35,6 +35,7 @@ public class Graph extends JComponent
         Graphics clone = g.create();
         clone.setColor(Color.RED);
        
+        int ytranslate[] = new int[y.length];
         
         int i = 0;
         int plot = 0;
@@ -44,10 +45,10 @@ public class Graph extends JComponent
             this.x[i] = plot;
             plot += increment;
             
-            this.y[i] += (this.getHeight()/2 - this.moyenne);
+            ytranslate[i] = this.y[i] + (this.getHeight()/2 - this.moyenne);
         }
         
-        clone.drawPolyline(this.x,this.y,this.y.length);
+        clone.drawPolyline(this.x,ytranslate,this.y.length);
     }
 
 

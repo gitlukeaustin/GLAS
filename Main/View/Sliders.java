@@ -1,43 +1,48 @@
 package Main.View;
 import javax.swing.*;
 import java.awt.*;
-
-
+import java.util.*;
+import Main.Controler.*;
 public class Sliders extends JPanel
 {
     public GridBagConstraints constraints;
     
     public Sliders()
     {
+        TreeMap<String,JSlider> list = new TreeMap<String,JSlider>();
         setLayout(new GridLayout(12,1));
-        JLabel echolabel = new JLabel("Echo");
+        
         JSlider echo = new JSlider();
-        JLabel reverblabel = new JLabel("Réverbe");
+        list.put("Echo",echo);
+        
         JSlider reverb = new JSlider();
-        JLabel distortionlabel = new JLabel("Distortion");
+        list.put("Réverbe",reverb);
+        
         JSlider distortion = new JSlider();
-        JLabel pitchlabel = new JLabel("Pitch");
+        list.put("Distortion",distortion);
+        
         JSlider pitch = new JSlider();
-        JLabel vitesselabel = new JLabel("Vitess");
+        list.put("Pitch",pitch);
+        
         JSlider vitesse = new JSlider();
-        JLabel compressionlabel = new JLabel("Compression");
+        list.put("Vitesse",vitesse);
+        
         JSlider compression = new JSlider(8,64);
+        list.put("Compression",compression);
         compression.setMinorTickSpacing(8);
+        compression.setValueIsAdjusting(true);
         compression.setPaintTicks(true);
         compression.setPaintLabels(true);
 
-        add(echolabel);
-        add(echo);
-        add(reverblabel);
-        add(reverb);
-        add(distortionlabel);
-        add(distortion);
-        add(pitchlabel);
-        add(pitch);
-        add(vitesselabel);
-        add(vitesse);
-        add(compressionlabel);
-        add(compression);
+        SliderControl slidercontrol = new SliderControl();
+        
+        for(String label : list.keySet())
+        {
+            add(new JLabel(label));
+            add(list.get(label));
+            ((JSlider)list.get(label)).setOpaque(false);
+            ((JSlider)list.get(label)).addChangeListener(slidercontrol);
+        }
         
         this.constraints = new GridBagConstraints();
         this.constraints.gridy = 0;

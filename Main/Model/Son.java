@@ -3,13 +3,16 @@ import java.io.File;
 import java.io.IOException;
 import javax.sound.sampled.*;
 
-public class Son
+public class Son implements Runnable
 {
 	private final int BUFL = 128000;
 	private File soundfile;
 	private AudioInputStream stream;
 	private AudioFormat format;
 	private SourceDataLine source;
+    
+    private boolean play;
+    private boolean stop;
 
 	public Son(File f)
 	{
@@ -26,11 +29,17 @@ public class Son
 	}
 
 
-	public void jouerSon()
+	public void run() /* jouerson */
 	{
+        play = true;
+        stop = false;
 		DataLine.Info info = new DataLine.Info(SourceDataLine.class, format);
 		try
 		{
+            if(source != null)
+            {
+                source.close();
+            }
 			source = (SourceDataLine) AudioSystem.getLine(info);
 			source.open(format);
 			
@@ -45,7 +54,7 @@ public class Son
 		int bytes = 0;
 
 		byte[] buf = new byte[BUFL];
-		while(bytes != -1)
+		while(bytes != -1 && play)
 		{	
 			try
 			{
@@ -61,8 +70,23 @@ public class Son
 			}
 		}
 	
-		source.drain();
-		source.close();
+        if(stop)
+        {
+            source.drain();
+        }
+        
 	}
+    
+    public void arreterSon()
+    {
+        play = false;
+        stop = true;
+    }
+    
+    public void pauseSon()
+    {
+        play = false;
+        stop = false;
+    }
 
 }

@@ -12,7 +12,7 @@ public class Onde extends JPanel
         JLabel label = new JLabel("",image,JLabel.LEFT);
         add(label,BorderLayout.WEST);*/
         setLayout(new GridLayout(2,1));
-        int[] ypoints = {50,40,60,30,34,13,42,42,13,32,12,34,33,42,23,12,43,12,51,62,43,14};
+        int[] ypoints = {8,-3,5,-1,16,-3,4,6,-1,4,6,3,7,-8,3,2,-7,4,2,4,-7,5,-3,8};
         add(new Graph(ypoints));
         add(new Graph());
         this.setBackground(Color.BLACK);

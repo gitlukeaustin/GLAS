@@ -6,17 +6,34 @@ import Main.Controler.*;
 public class Playback extends JPanel
 {
     public GridBagConstraints constraints;
-	private PlayController playcontroler;  
+	private PlaybackControl playcontroler;
+    
+    public static final String PLAY = "\u25B6";
+    public static final String PAUSE = "\u23F8";
+    public static final String STOP = "\u25B4";
+
+    
  
     public Playback()
     {
         setLayout(new GridBagLayout());
+        
         JSlider volume = new JSlider(SwingConstants.HORIZONTAL);
-        JButton stop = new JButton("\u25B4");
-        JButton pause = new JButton("\u23F8");
-        JButton play = new JButton("\u25B6");
-	this.playcontroler = new PlayController();
-	play.addListener(playcontroler);
+        
+        JButton stop = new JButton(Playback.STOP);
+        JButton pause = new JButton(Playback.PAUSE);
+        JButton play = new JButton(Playback.PLAY);
+        
+        stop.setOpaque(false);
+        pause.setOpaque(false);
+        play.setOpaque(false);
+
+        
+        this.playcontroler = new PlaybackControl();
+        play.addActionListener(playcontroler);
+        stop.addActionListener(playcontroler);
+        pause.addActionListener(playcontroler);
+        
         JButton sauvegarde = new JButton("Sauvegarder");
         JButton ouvrir = new JButton("Ouvrir");
         JButton piano = new JButton("Piano");
@@ -55,7 +72,7 @@ public class Playback extends JPanel
 
     }
 
-	public PlayController getPlayController()
+	public PlaybackControl getPlayController()
 	{
 		return this.playcontroler;
 	}

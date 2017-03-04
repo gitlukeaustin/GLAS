@@ -8,16 +8,16 @@ import java.util.*;
 
 public class Menu extends JMenuBar
 {
-    public Menu(ArrayList<JPanel> panels)
+    public Menu(ArrayList<JPanel> panels, Playback p)
     {
         JMenu filemenu = new JMenu("File");
         
         JMenuItem open = new JMenuItem("Ouvrir");
         open.setMnemonic(KeyEvent.VK_O);
-        open.addActionListener(new MenuControl());
+        open.addActionListener(new MenuControl(p));
         JMenuItem save = new JMenuItem("Sauvegarder");
         save.setMnemonic(KeyEvent.VK_S);
-        open.addActionListener(new MenuControl());
+        save.addActionListener(new MenuControl());
         filemenu.add(open);
         filemenu.add(save);
         
