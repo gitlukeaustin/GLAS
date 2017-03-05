@@ -31,7 +31,7 @@ public class FenetreMain extends JFrame
         Sliders effets = new Sliders();
         this.add(effets,effets.constraints);
         panels.add(effets);
-        this.setJMenuBar(new Menu(panels));
+        this.setJMenuBar(new Menu(panels,menu));
 		this.setVisible(true);
 	}
 	private void vueBas()
