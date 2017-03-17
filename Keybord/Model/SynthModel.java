@@ -2,6 +2,14 @@ package Keybord.Model;
 import javax.sound.midi.*;
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.sound.sampled.AudioFormat;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.AudioFileFormat;
+import com.sun.media.sound.AudioSynthesizer;
 
 public class SynthModel 
 {
@@ -140,6 +148,7 @@ public class SynthModel
 	public void pauseSequence()
 	{
 		this.sequencer.stop();
+		this.sequencer.close();
 	}
 	public void ajoutEvenement(int type, int num) {
         ShortMessage message = new ShortMessage();
@@ -152,19 +161,118 @@ public class SynthModel
         } catch (Exception ex) { ex.printStackTrace(); }
     }
     public void saveMidiFile(File file) {
-            try {
-                int[] fileTypes = MidiSystem.getMidiFileTypes(sequence);
-                if (fileTypes.length == 0) {
-                    System.out.println("Can't save sequence");
-                } else {
-                    if (MidiSystem.write(sequence, fileTypes[0], file) == -1) {
-                        throw new IOException("Problems writing to file");
-                    } 
-                }
-            } catch (SecurityException ex) { 
-                //JavaSound.showInfoDialog();
-            } catch (Exception ex) { 
-                ex.printStackTrace(); 
-            }
+    try {
+        int[] fileTypes = MidiSystem.getMidiFileTypes(sequence);
+        if (fileTypes.length == 0) {
+            System.out.println("Can't save sequence");
+        } else {
+            if (MidiSystem.write(sequence, fileTypes[0], file) == -1) {
+                throw new IOException("Problems writing to file");
+            } 
         }
+	    } catch (SecurityException ex) { 
+	        //JavaSound.showInfoDialog();
+	    } catch (Exception ex) { 
+	        ex.printStackTrace(); 
+	    }
+	}
+	public void saveWavFile(File file)
+	{
+		try{
+			AudioSynthesizer synth2 = findAudioSynthesizer();
+			System.out.println("debut Save");
+			AudioFormat format = new AudioFormat(96000, 24, 2, true, false);
+	        Map<String, Object> p = new HashMap<String, Object>();
+	        p.put("interpolation", "sinc");
+	        p.put("max polyphony", "1024");
+	        AudioInputStream stream = synth2.openStream(format, p);
+
+	        // Play Sequence into AudioSynthesizer Receiver.
+	        double total = send(this.sequence, synth2.getReceiver());
+
+	        // Calculate how long the WAVE file needs to be.
+	        long len = (long) (stream.getFormat().getFrameRate() * (total + 4));
+	        stream = new AudioInputStream(stream, stream.getFormat(), len);
+
+	        // Write WAVE file to disk.
+	        try{
+	        	AudioSystem.write(stream, AudioFileFormat.Type.WAVE, file);
+	        }catch(IOException ex)
+	        {
+	        	ex.printStackTrace();
+	        }
+	    }catch(MidiUnavailableException e)
+	    {
+	    	e.printStackTrace();
+	    }
+	}
+	private double send(Sequence seq, Receiver recv) 
+	{
+		float divtype = seq.getDivisionType();
+		assert (seq.getDivisionType() == Sequence.PPQ);
+		Track[] tracks = seq.getTracks();
+		int[] trackspos = new int[tracks.length];
+		int mpq = 500000;
+		int seqres = seq.getResolution();
+		long lasttick = 0;
+		long curtime = 0;
+		while (true) {
+			MidiEvent selevent = null;
+			int seltrack = -1;
+			for (int i = 0; i < tracks.length; i++) {
+				int trackpos = trackspos[i];
+				Track track = tracks[i];
+				if (trackpos < track.size()) {
+					MidiEvent event = track.get(trackpos);
+					if (selevent == null
+							|| event.getTick() < selevent.getTick()) {
+						selevent = event;
+						seltrack = i;
+					}
+				}
+			}
+			if (seltrack == -1)
+				break;
+			trackspos[seltrack]++;
+			long tick = selevent.getTick();
+			if (divtype == Sequence.PPQ)
+				curtime += ((tick - lasttick) * mpq) / seqres;
+			else
+				curtime = (long) ((tick * 1000000.0 * divtype) / seqres);
+			lasttick = tick;
+			MidiMessage msg = selevent.getMessage();
+			if (msg instanceof MetaMessage) {
+				if (divtype == Sequence.PPQ)
+					if (((MetaMessage) msg).getType() == 0x51) {
+						byte[] data = ((MetaMessage) msg).getData();
+						mpq = ((data[0] & 0xff) << 16)
+								| ((data[1] & 0xff) << 8) | (data[2] & 0xff);
+					}
+			} else {
+				if (recv != null)
+					recv.send(msg, curtime);
+			}
+		}
+		return curtime / 1000000.0;
+	}
+	private AudioSynthesizer findAudioSynthesizer() throws MidiUnavailableException 
+	{
+		// First check if default synthesizer is AudioSynthesizer.
+		Synthesizer synth = MidiSystem.getSynthesizer();
+		if (synth instanceof AudioSynthesizer) {
+			return (AudioSynthesizer)synth;
+		}
+
+		// If default synthesizer is not AudioSynthesizer, check others.
+		MidiDevice.Info[] midiDeviceInfo = MidiSystem.getMidiDeviceInfo();
+		for (int i = 0; i < midiDeviceInfo.length; i++) {
+			MidiDevice dev = MidiSystem.getMidiDevice(midiDeviceInfo[i]);
+			if (dev instanceof AudioSynthesizer) {
+				return (AudioSynthesizer) dev;
+			}
+		}
+
+		// No AudioSynthesizer was found, return null.
+		return null;
+	}
 }

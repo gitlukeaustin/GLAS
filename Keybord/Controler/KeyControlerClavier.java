@@ -10,6 +10,7 @@ public class KeyControlerClavier implements KeyListener
 	private boolean espace=false;
 	private boolean ctrGauche=false;
 	private boolean shift=false;
+	private int current=0;
 	private ArrayList<Key> notesBlanche = new ArrayList<Key>();
 	private ArrayList<Key> notesNoire = new ArrayList<Key>();
 	public KeyControlerClavier(PianoView vue,SynthModel synthModel,ArrayList<Key> notesBlanche,ArrayList<Key> notesNoire)
@@ -32,11 +33,15 @@ public class KeyControlerClavier implements KeyListener
 		else
 		{
 			touche = getTouche(e);
-			if(touche!=-1)
+			if(this.current!=touche)
 			{
-				this.synthModel.noteOnModel(touche);
-				getKey(touche).setOn();
-				this.vue.repaint();
+				if(touche!=-1)
+				{
+					this.synthModel.noteOnModel(touche);
+					getKey(touche).setOn();
+					this.vue.repaint();
+				}
+				this.current = touche;
 			}
 		}
 	}
@@ -44,11 +49,17 @@ public class KeyControlerClavier implements KeyListener
 	{
 		int touche=0;
 		if(e.getKeyCode()==KeyEvent.VK_CONTROL)
+		{
 			this.ctrGauche=false;
+		}
 		else if(e.getKeyCode()==KeyEvent.VK_SHIFT)
+		{
 			this.shift=false;
+		}
 		else if(e.getKeyCode()==KeyEvent.VK_SPACE)
+		{
 			this.espace=false;
+		}
 		else
 		{
 			touche = getTouche(e);
@@ -57,8 +68,18 @@ public class KeyControlerClavier implements KeyListener
 				this.synthModel.noteOffModel(touche);
 				getKey(touche).setOff();
 				this.vue.repaint();
+				this.current = 0;
 			}
 		}
+	}
+	public void setAllof()
+	{
+		//parcour de toute les touches pour setoff();
+		for(Key key : this.notesBlanche)
+			this.synthModel.noteOffModel(key.getNum());
+		for(Key key : this.notesNoire)
+			this.synthModel.noteOffModel(key.getNum());
+		this.vue.repaint();
 	}
 	public int getNumeroNote(KeyEvent e)
 	{
