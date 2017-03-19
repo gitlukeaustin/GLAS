@@ -1,7 +1,10 @@
 package Main.Model;
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import javax.sound.sampled.*;
+import java.util.Vector;
+import java.awt.geom.Line2D;
 
 public class Son implements Runnable
 {
@@ -28,20 +31,129 @@ public class Son implements Runnable
 		}
 	}
 
+	public Vector createWaveForm(Dimension d) {
+		byte[] audioBytes = null;
+		Vector lines = new Vector();
+        lines.removeAllElements();  // clear the old vector
 
+        //AudioFormat format = this.stream.getFormat();
+        if (audioBytes == null) {
+            try {
+                audioBytes = new byte[
+                    (int) (this.stream.getFrameLength() 
+                    * this.format.getFrameSize())];
+                this.stream.read(audioBytes);
+            } catch (Exception ex) { 
+                ex.printStackTrace();
+                return null; 
+            }
+        }
+
+        //Dimension d = getSize();
+        int w = d.width;
+        int h = d.height-15;
+        int[] audioData = null;
+        int nb16=0,nb8=0;
+        if (format.getSampleSizeInBits() == 16) {
+             int nlengthInSamples = audioBytes.length / 2;
+             System.out.println("length="+nlengthInSamples);
+             audioData = new int[nlengthInSamples];
+             if (format.isBigEndian()) {
+                for (int i = 0; i < nlengthInSamples; i++) {
+                     /* First byte is MSB (high order) */
+                     int MSB = (int) audioBytes[2*i];
+                     /* Second byte is LSB (low order) */
+                     int LSB = (int) audioBytes[2*i+1];
+                     audioData[i] = MSB << 8 | (255 & LSB);
+                     nb16++;
+                 }
+             } else {
+                 for (int i = 0; i < nlengthInSamples; i++) {
+                     /* First byte is LSB (low order) */
+                     int LSB = (int) audioBytes[2*i];
+                     /* Second byte is MSB (high order) */
+                     int MSB = (int) audioBytes[2*i+1];
+                     audioData[i] = MSB << 8 | (255 & LSB);
+                     nb16++;
+                 }
+             }
+         } else if (format.getSampleSizeInBits() == 8) {
+             int nlengthInSamples = audioBytes.length;
+             audioData = new int[nlengthInSamples];
+             System.out.println("length="+nlengthInSamples);
+             if (format.getEncoding().toString().startsWith("PCM_SIGN")) {
+                 for (int i = 0; i < audioBytes.length; i++) {
+                     audioData[i] = audioBytes[i];
+                     nb8++;
+                 }
+             } else {
+                 for (int i = 0; i < audioBytes.length; i++) {
+                     audioData[i] = audioBytes[i] - 128;
+                     nb8++;
+                 }
+             }
+        }else if (format.getSampleSizeInBits() == 24) {
+             int nlengthInSamples = audioBytes.length / 3;
+             System.out.println("length="+nlengthInSamples);
+             audioData = new int[nlengthInSamples];
+             if (format.isBigEndian()) {
+                for (int i = 0; i < nlengthInSamples; i++) {
+                     /* First byte is MSB (high order) */
+                     int MSB = (int) audioBytes[2*i];
+                     /* Second byte is LSB (low order) */
+                     int LSB = (int) audioBytes[2*i+1];
+                     audioData[i] = MSB << 8 | (255 & LSB);
+                     nb16++;
+                 }
+             } else {
+                 for (int i = 0; i < nlengthInSamples; i++) {
+                     /* First byte is LSB (low order) */
+                     int LSB = (int) audioBytes[2*i];
+                     /* Second byte is MSB (high order) */
+                     int MSB = (int) audioBytes[2*i+1];
+                     audioData[i] = MSB << 8 | (255 & LSB);
+                     nb16++;
+                 }
+             }
+         }
+           
+        int frames_per_pixel = audioBytes.length / format.getFrameSize()/w;
+        byte my_byte = 0;
+        double y_last = 0;
+        int nbLine=0;
+        int numChannels = format.getChannels();
+        for (double x = 0; x < w && audioData != null; x++) {
+            int idx = (int) (frames_per_pixel * numChannels * x);
+            if (format.getSampleSizeInBits() == 8) {
+                 my_byte = (byte) audioData[idx];
+            } else if(format.getSampleSizeInBits() == 16){
+                 my_byte = (byte) (128 * audioData[idx] / 32768 );
+            }
+            else
+            {
+            	 my_byte = (byte) (128 * audioData[idx] / (32768*2) );
+            }
+            double y_new = (double) (h * (128 - my_byte) / 256);
+            nbLine++;
+            lines.add(new Line2D.Double(x, y_last, x, y_new));
+            y_last = y_new;
+        }
+        System.out.println("nombre ligne = "+nbLine+" nb16="+nb16+" nb8="+nb8+" sampleSizeinBits="+format.getSampleSizeInBits());
+        return lines;
+    }
 	public void run() /* jouerson */
 	{
-        play = true;
-        stop = false;
+        this.play = true;
+        this.stop = false;
 		DataLine.Info info = new DataLine.Info(SourceDataLine.class, format);
 		try
 		{
-            if(source != null)
+            if(this.source != null)
             {
-                source.close();
+                this.source.close();
             }
-			source = (SourceDataLine) AudioSystem.getLine(info);
-			source.open(format);
+			this.source = (SourceDataLine) AudioSystem.getLine(info);
+			this.source.open(format);
 			
 		}
 		catch(LineUnavailableException e)
@@ -49,12 +161,12 @@ public class Son implements Runnable
 			System.out.println("Line unavailable");
 		}
 
-		source.start();
+		this.source.start();
 
 		int bytes = 0;
 
 		byte[] buf = new byte[BUFL];
-		while(bytes != -1 && play)
+		while(bytes != -1 && this.play)
 		{	
 			try
 			{
@@ -66,27 +178,27 @@ public class Son implements Runnable
 			}
 			if(bytes >= 0)
 			{
-				int byteswritten = source.write(buf, 0, bytes);
+				int byteswritten = this.source.write(buf, 0, bytes);
 			}
 		}
 	
         if(stop)
         {
-            source.drain();
+            this.source.drain();
         }
         
 	}
     
     public void arreterSon()
     {
-        play = false;
-        stop = true;
+        this.play = false;
+        this.stop = true;
     }
     
     public void pauseSon()
     {
-        play = false;
-        stop = false;
+        this.play = false;
+        this.stop = false;
     }
 
 }

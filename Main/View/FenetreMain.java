@@ -33,6 +33,7 @@ public class FenetreMain extends JFrame
         panels.add(effets);
         this.setJMenuBar(new Menu(panels,menu));
 		this.setVisible(true);
+		wave.draw();
 	}
 	private void vueBas()
 	{
