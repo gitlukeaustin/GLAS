@@ -28,7 +28,7 @@ public class Onde extends JPanel
     }
     public void draw()
     {
-        Son son = new Son(new File("C:\\Users\\Ackincolor\\Desktop\\GLAS-master\\test1.wav"));
+        Son son = new Son(new File("../../audio.wav"));
         add(new Graph(son.createWaveForm(this.getSize())));
         add(new Graph());
         this.repaint();
