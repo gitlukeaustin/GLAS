@@ -32,19 +32,22 @@ public class Sliders extends JPanel
         this.list.put("Vitesse",vitesse);
         
         JSlider compression = new JSlider(8,64);
-        this.list.put("Compression",compression);
         compression.setMinorTickSpacing(8);
-        compression.setValueIsAdjusting(true);
-        compression.setPaintTicks(true);
-        compression.setPaintLabels(true);
-
-        SliderControl slidercontrol = new SliderControl(this);
+	compression.setSnapToTicks(true);
+	this.list.put("Compression",compression);
+        
+	SliderControl slidercontrol = new SliderControl(this);
         
         for(String label : list.keySet())
         {
-		list.get(label).setName("label");
-        	((JSlider)list.get(label)).setOpaque(false);
-            ((JSlider)list.get(label)).addChangeListener(slidercontrol);
+		this.list.get(label).setName(label);
+		this.list.get(label).setPaintTicks(true);
+		
+		this.list.get(label).setPaintTrack(true);
+		
+		this.list.get(label).setPaintLabels(true);
+        	((JSlider)this.list.get(label)).setOpaque(false);
+            ((JSlider)this.list.get(label)).addChangeListener(slidercontrol);
 
 	    add(new JLabel(label));
             add(list.get(label));
