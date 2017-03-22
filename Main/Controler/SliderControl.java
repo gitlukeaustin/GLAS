@@ -1,16 +1,19 @@
 package Main.Controler;
 import javax.swing.event.*;
+import javax.swing.*;
 import Main.View.*;
 
 public class SliderControl implements ChangeListener
 {
-    public SliderControl()
-    {
-        
-    }
-    
+	private Sliders sliders;
+
+	public SliderControl(Sliders sl)
+	{
+		this.sliders = sl;
+	}
+
     public void stateChanged(ChangeEvent e)
     {
-        System.out.println(e.getSource().toString()+" changé");
+	this.sliders.changerEffet(((JSlider)e.getSource()).getName(),((JSlider)e.getSource()).getValue());
     }
 }

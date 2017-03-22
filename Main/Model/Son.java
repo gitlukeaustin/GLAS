@@ -13,7 +13,15 @@ public class Son implements Runnable
 	private AudioInputStream stream;
 	private AudioFormat format;
 	private SourceDataLine source;
-    
+
+    	private FloatControl volume;
+	private FloatControl reverb;
+	private FloatControl gain;
+	private FloatControl sample_rate;	
+	private FloatControl echo;
+	private FloatControl vitesse;
+	private FloatControl pan;	
+
     private boolean play;
     private boolean stop;
 
@@ -146,13 +154,22 @@ public class Son implements Runnable
         this.play = true;
         this.stop = false;
 		DataLine.Info info = new DataLine.Info(SourceDataLine.class, format);
+		
 		try
 		{
-            if(this.source != null)
-            {
-                this.source.close();
-            }
+            		if(this.source != null)
+            		{
+               			 this.source.close();
+            		}
 			this.source = (SourceDataLine) AudioSystem.getLine(info);
+			this.volume = (FloatControl) source.getControl(FloatControl.Type.VOLUME);
+
+			this.volume = (FloatControl) source.getControl(FloatControl.Type.VOLUME);
+			this.reverb = (FloatControl) source.getControl(FloatControl.Type.REVERB_SEND);
+			this.sample_rate = (FloatControl) source.getControl(FloatControl.Type.SAMPLE_RATE);
+			this.pan = (FloatControl) source.getControl(FloatControl.Type.PAN);
+			this.gain = (FloatControl) source.getControl(FloatControl.Type.MASTER_GAIN);
+			this.echo = (FloatControl) source.getControl(FloatControl.Type.REVERB_RETURN);
 			this.source.open(format);
 			
 		}
@@ -200,5 +217,35 @@ public class Son implements Runnable
         this.play = false;
         this.stop = false;
     }
+
+
+	public void changerEffet(String nom, int valeur)
+	{
+		if(nom.equals("Volume"))
+		{
+			this.volume.setValue((float)valeur);
+			System.out.println("Changement du volume");
+		}
+		else if(nom.equals("Echo"))
+		{
+			this.echo.setValue((float)valeur);
+			System.out.println("Changement de l'echo");
+		}
+		else if(nom.equals("Compression"))
+		{
+			this.sample_rate.setValue((float)valeur);
+			System.out.println("Changement du compression");
+		}
+		else if(nom.equals("Vitesse"))
+		{
+			this.vitesse.setValue((float)valeur);
+			System.out.println("Changement du vitesse");
+		}	
+		else if(nom.equals("Reverb"))
+		{
+			this.reverb.setValue((float)valeur);
+			System.out.println("Changement du reverb");
+		}
+	}
 
 }

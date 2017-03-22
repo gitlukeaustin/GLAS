@@ -44,6 +44,7 @@ public class MenuControl implements ActionListener
 			this.son = new Son(file);
 			((Playback)this.panels.get("Playback")).getPlayController().setSon(son);
 			((Onde)this.panels.get("Onde")).setSon(son);
+			((Sliders)this.panels.get("Sliders")).setSon(son);
 		    }
 		}
 		else if(((JMenuItem)e.getSource()).getText().startsWith("Sauvegarder"))

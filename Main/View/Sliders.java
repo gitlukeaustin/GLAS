@@ -3,45 +3,51 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.*;
 import Main.Controler.*;
+import Main.Model.*;
+
 public class Sliders extends JPanel
 {
     public GridBagConstraints constraints;
-    
+	private Son son;   
+	TreeMap<String,JSlider> list;
+ 
     public Sliders()
     {
-        TreeMap<String,JSlider> list = new TreeMap<String,JSlider>();
+        list = new TreeMap<String,JSlider>();
         setLayout(new GridLayout(12,1));
         
         JSlider echo = new JSlider();
-        list.put("Echo",echo);
+        this.list.put("Echo",echo);
         
         JSlider reverb = new JSlider();
-        list.put("Réverbe",reverb);
+        this.list.put("Réverbe",reverb);
         
         JSlider distortion = new JSlider();
-        list.put("Distortion",distortion);
+        this.list.put("Distortion",distortion);
         
         JSlider pitch = new JSlider();
-        list.put("Pitch",pitch);
+        this.list.put("Pitch",pitch);
         
         JSlider vitesse = new JSlider();
-        list.put("Vitesse",vitesse);
+        this.list.put("Vitesse",vitesse);
         
         JSlider compression = new JSlider(8,64);
-        list.put("Compression",compression);
+        this.list.put("Compression",compression);
         compression.setMinorTickSpacing(8);
         compression.setValueIsAdjusting(true);
         compression.setPaintTicks(true);
         compression.setPaintLabels(true);
 
-        SliderControl slidercontrol = new SliderControl();
+        SliderControl slidercontrol = new SliderControl(this);
         
         for(String label : list.keySet())
         {
-            add(new JLabel(label));
-            add(list.get(label));
-            ((JSlider)list.get(label)).setOpaque(false);
+		list.get(label).setName("label");
+        	((JSlider)list.get(label)).setOpaque(false);
             ((JSlider)list.get(label)).addChangeListener(slidercontrol);
+
+	    add(new JLabel(label));
+            add(list.get(label));
         }
         
         this.constraints = new GridBagConstraints();
@@ -52,4 +58,22 @@ public class Sliders extends JPanel
         this.constraints.anchor = GridBagConstraints.FIRST_LINE_END;
         this.constraints.insets = new Insets(2,2,2,2);
     }
+
+	
+	public void setSon(Son s)
+	{
+		this.son = s;
+	}
+
+	public void changerEffet(String nom, int val)
+	{	
+		if(son != null)
+		{
+			son.changerEffet(nom, val);
+		}	
+		else
+		{
+			System.out.println("Son non défini ");
+		}
+	}
 }
