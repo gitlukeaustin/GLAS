@@ -47,8 +47,13 @@ public class PlaybackControl implements ActionListener
         }
 	}
 
+	public void setSon(Son s)
+	{
+		this.son = s;
+	}
+
 	public void setSon(File f)
 	{	
-		son = new Son(f);
+		this.son = new Son(f);
 	}
 }

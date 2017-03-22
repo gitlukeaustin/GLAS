@@ -1,4 +1,5 @@
 package Main.Controler;
+
 import java.awt.event.*;
 import java.awt.*;
 import java.util.*;
@@ -7,13 +8,13 @@ import javax.swing.*;
 
 public class ChangerCouleurs implements ActionListener
 {
-    private ArrayList<JPanel> panels;
+    private TreeMap<String, JPanel> panels;
     private ArrayList<Color> theme_a;
     private ArrayList<Color> theme_b;
     private ArrayList<Color> theme_c;
     private ArrayList<Color> theme_d;
     
-    public ChangerCouleurs(ArrayList<JPanel> panels)
+    public ChangerCouleurs(TreeMap<String, JPanel> panels)
     {
         this.panels = panels;
         theme_a = new ArrayList<Color>();
@@ -55,9 +56,9 @@ public class ChangerCouleurs implements ActionListener
             choix = theme_d;
         }
         int i = 0;
-        for(Color c : choix)
+        for(String name : panels.keySet())
         {
-            this.panels.get(i).setBackground(c);
+            this.panels.get(name).setBackground(choix.get(i));
             i++;
         }
     }

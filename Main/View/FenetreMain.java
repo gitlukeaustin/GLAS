@@ -4,6 +4,7 @@ import java.awt.*;
 import javax.swing.*;
 import javax.swing.text.html.*;
 import java.util.*;
+
 public class FenetreMain extends JFrame
 {
 	private WidgetAudio[] tableauWidgetAudio = new WidgetAudio[4];
@@ -21,17 +22,17 @@ public class FenetreMain extends JFrame
 		coloneGauche();
 		vueMilieu();
 		vueBas();*/
-        ArrayList<JPanel> panels = new ArrayList<JPanel>();
-        Onde wave = new Onde();
-        this.add(wave,wave.constraints);
-        panels.add(wave);
-        Playback menu = new Playback();
-        this.add(menu,menu.constraints);
-        panels.add(menu);
-        Sliders effets = new Sliders();
-        this.add(effets,effets.constraints);
-        panels.add(effets);
-        this.setJMenuBar(new Menu(panels,menu));
+		TreeMap<String, JPanel> panels = new TreeMap<String, JPanel>();
+		Onde wave = new Onde();
+		this.add(wave,wave.constraints);
+		panels.put("Onde", wave);
+		Playback playbackmenu = new Playback();
+		this.add(playbackmenu,playbackmenu.constraints);
+		panels.put("Playback",playbackmenu);
+		Sliders effets = new Sliders();
+		this.add(effets,effets.constraints);
+		panels.put("Sliders",effets);
+		this.setJMenuBar(new Menu(panels,playbackmenu));
 		this.setVisible(true);
 		wave.draw();
 	}

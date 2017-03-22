@@ -8,13 +8,13 @@ import java.util.*;
 
 public class Menu extends JMenuBar
 {
-    public Menu(ArrayList<JPanel> panels, Playback p)
+    public Menu(TreeMap<String, JPanel> panels, Playback p)
     {
         JMenu filemenu = new JMenu("File");
         
         JMenuItem open = new JMenuItem("Ouvrir");
         open.setMnemonic(KeyEvent.VK_O);
-        open.addActionListener(new MenuControl(p));
+        open.addActionListener(new MenuControl(panels,p));
         JMenuItem save = new JMenuItem("Sauvegarder");
         save.setMnemonic(KeyEvent.VK_S);
         save.addActionListener(new MenuControl());

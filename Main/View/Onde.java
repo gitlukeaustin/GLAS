@@ -7,7 +7,9 @@ import java.awt.*;
 public class Onde extends JPanel
 {
     public GridBagConstraints constraints;
-    
+	
+	private Son son;   
+ 	
     public Onde()
     {
         /*ImageIcon image = new ImageIcon("Image/GlasImage.png");
@@ -26,11 +28,28 @@ public class Onde extends JPanel
         this.constraints.gridheight = 4;
         this.constraints.insets = new Insets(2,2,2,2);
     }
+
+	public void setSon(Son s)
+	{
+		this.son = s;
+		add(new Graph(son.createWaveForm(this.getSize())));
+		this.repaint();
+	} 
+
     public void draw()
     {
-        Son son = new Son(new File("C:\\Users\\Ackincolor\\Desktop\\GLAS-master\\test1.wav"));
-        add(new Graph(son.createWaveForm(this.getSize())));
-        add(new Graph());
-        this.repaint();
+	File f = new File("C:\\Users\\Ackincolor\\Desktop\\GLAS-master\\test1.wav");	
+	
+	if(f.exists())
+	{
+        	this.son = new Son(f);
+		add(new Graph(son.createWaveForm(this.getSize())));
+		add(new Graph());
+		this.repaint();
+	}
+	else
+	{
+		System.out.println("Ce fichier n'existe pas.");
+	}
     }
 }
